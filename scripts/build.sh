@@ -2,8 +2,8 @@
 set -eu
 
 # NOTE: Edit project_name and rpm_name.
-project_name=hnscl-python27
-rpm_name=hn-python27
+project_name=hnscl-python2
+rpm_name=hn-python2
 arch=x86_64
 
 spec_file=${rpm_name}.spec
@@ -72,7 +72,7 @@ EOF
   if [ $status = "404" ]; then
     # NOTE: Edit description. You may or may not need to edit instructions.
     copr-cli create --chroot ${mock_chroot} \
-      --description 'Software collection metapackage for python 2.7 with the prefix directory /opt/hn' \
+      --description 'Software collection metapackage for python 2 with the prefix directory /opt/hn' \
       --instructions \
 "\`\`\`
 sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${project_name}.repo https://copr.fedoraproject.org/coprs/${COPR_USERNAME}/${project_name}/repo/epel-7/${COPR_USERNAME}-${project_name}-epel-7.repo

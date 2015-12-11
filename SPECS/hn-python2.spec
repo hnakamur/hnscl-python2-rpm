@@ -1,6 +1,6 @@
 %global scl_name_prefix hn-
 %global scl_name_base python
-%global scl_name_version 27
+%global scl_name_version 2
 %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}
 
 # NOTE: You must set _scl_prefix before '%scl_package %scl'.
