@@ -1,7 +1,7 @@
 hnscl-python2-rpm
 =================
 
-A Dockerfile to build the latest python2 software collection metapackage rpm for CentOS7 using [Travis CI](https://travis-ci.org/) and [fedora copr](https://copr.fedoraproject.org/).
+A Dockerfile to build the latest python2 software collection metapackage rpm for CentOS 7 using [copr](https://copr.fedoraproject.org/).
 
 ## Setup
 
