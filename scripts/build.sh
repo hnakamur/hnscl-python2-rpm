@@ -3,7 +3,7 @@ set -eu
 
 # NOTE: Edit project_name and rpm_name.
 project_name=hnscl-python27
-rpm_name=python27
+rpm_name=hn-python27
 arch=x86_64
 
 spec_file=${rpm_name}.spec
@@ -72,8 +72,8 @@ EOF
   if [ $status = "404" ]; then
     # NOTE: Edit description. You may or may not need to edit instructions.
     copr-cli create --chroot ${mock_chroot} \
-    --description 'Software collection metapackage that installs hn-python27' \
-    --instructions \
+      --description 'Software collection metapackage for python 2.7 with the prefix directory /opt/hn' \
+      --instructions \
 "\`\`\`
 sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${project_name}.repo https://copr.fedoraproject.org/coprs/${COPR_USERNAME}/${project_name}/repo/epel-7/${COPR_USERNAME}-${project_name}-epel-7.repo
 \`\`\`
@@ -81,8 +81,14 @@ sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${project_name}.repo https://
 \`\`\`
 sudo yum install ${rpm_name}
 \`\`\`" \
-${project_name}
+      ${project_name}
+
+    # NOTE: Add scl-utils-build package to chroot.
+    # We call "Chroot Modification" API with curl since it is not supported in copr-cli 0.3.0.
+    # See "Chroot Modification" at https://copr.fedoraproject.org/api/
+    curl -s -X POST -u "${COPR_LOGIN}:${COPR_TOKEN}" -d 'buildroot_pkgs=scl-utils-build' https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/${project_name}/modify/${mock_chroot}/
   fi
+
   copr-cli build --nowait ${project_name} "${topdir}/SRPMS/${srpm_file}"
   rm $HOME/.config/copr
 }

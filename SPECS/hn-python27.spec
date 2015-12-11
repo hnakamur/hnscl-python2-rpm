@@ -1,6 +1,23 @@
+%global scl_name_prefix hn-
 %global scl_name_base python
 %global scl_name_version 27
-%global scl %{scl_name_base}%{scl_name_version}
+%global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}
+
+# NOTE: You must set _scl_prefix before '%scl_package %scl'.
+%global _scl_prefix /opt/hn
+# NOTE: The following variables must be re-evaluated after changing _scl_prefix above.
+# I got these settings after trials and errors.
+# I don't know this is the right way to set directories with my _scl_prefix.
+%global _scl_scripts            %{_scl_prefix}/%{scl}
+%global _scl_root               %{_scl_prefix}/%{scl}/root
+%global _prefix                 %{_scl_root}/usr
+%global _sysconfdir             %{_scl_root}/etc
+%global _sharedstatedir         %{_scl_root}/var/lib
+%global _localstatedir          %{_scl_root}/var
+%global _datadir                %{_scl_root}/share
+%global _docdir                 %{_datadir}/doc
+%global _mandir                 %{_datadir}/man
+
 
 %scl_package %scl
 %global _turn_off_bytecompile 1
