@@ -17,7 +17,12 @@
 %global _datadir                %{_scl_root}/share
 %global _docdir                 %{_datadir}/doc
 %global _mandir                 %{_datadir}/man
-
+%global _bindir                 %{_prefix}/bin
+%if "%{_lib}" == "lib64"
+%global _libdir                 %{_prefix}/lib64
+%else
+%global _libdir                 %{_prefix}/lib
+%endif
 
 %scl_package %scl
 %global _turn_off_bytecompile 1
