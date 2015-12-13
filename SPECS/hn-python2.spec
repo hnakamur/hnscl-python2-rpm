@@ -22,7 +22,7 @@
 %scl_package %scl
 %global _turn_off_bytecompile 1
 
-%global install_scl 1
+%global install_scl 0
 
 # do not produce empty debuginfo package
 %global debug_package %{nil}
