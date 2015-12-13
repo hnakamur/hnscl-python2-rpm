@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-imagename=hnpython27
+imagename=hnpython27rpm
 
 usage() {
   cat <<'EOF' 1>&2
