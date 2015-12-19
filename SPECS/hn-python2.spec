@@ -122,10 +122,11 @@ EOF
 
 # Add the aditional macros to macros.%%{scl}-config
 cat %{SOURCE0} >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
-sed -i 's|@scl@|%{scl}|g' %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
+at_scl="`echo '%{scl}' | sed 's/-/_/g'`"
+sed -i "s|@scl@|${at_scl}|g" %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 # Create the scldevel subpackage macros
-cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel << EOF
+cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel << EOF
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{scl_prefix}
 EOF
@@ -145,7 +146,7 @@ install -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 %{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %files scldevel
-%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
+%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
 * Tue Jan 20 2015 Slavek Kabrda <bkabrda@redhat.com> - 1.1-20
