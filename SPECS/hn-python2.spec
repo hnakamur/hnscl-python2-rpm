@@ -122,8 +122,7 @@ EOF
 
 # Add the aditional macros to macros.%%{scl}-config
 cat %{SOURCE0} >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
-at_scl="`echo '%{scl}' | sed 's/-/_/g'`"
-sed -i "s|@scl@|${at_scl}|g" %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
+sed -i "s|@scl@|`echo '%{scl}' | sed 's/-/_/g'`|g" %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 # Create the scldevel subpackage macros
 cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel << EOF
