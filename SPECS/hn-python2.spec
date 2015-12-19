@@ -35,7 +35,7 @@
 Summary: Package that installs %scl
 Name: %scl_name
 Version: 1.1
-Release: 20%{?dist}
+Release: 21%{?dist}
 License: GPLv2+
 Source0: macros.additional.%{scl}
 Source1: README
@@ -148,6 +148,9 @@ install -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Sat Dec 19 2015 Hiroaki Nakamura <hnakamur@gmail.com> - 1.1-21
+- Modify for hn-python2 with prefix /opt/hn
+
 * Tue Jan 20 2015 Slavek Kabrda <bkabrda@redhat.com> - 1.1-20
 - Require python-pip and python-wheel (note: in rh-python34
   this is not necessary, because "python" depends on these).
