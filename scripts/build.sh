@@ -6,6 +6,18 @@ project_name=hnscl-python2
 rpm_name=hn-python2
 arch=x86_64
 
+# NOTE: Edit description here.
+copr_project_description="Software collection metapackage for python 2 with the prefix directory /opt/hn"
+
+# NOTE: You may or may not need to edit instructions.
+copr_project_instructions="\`\`\`
+sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${project_name}.repo https://copr.fedoraproject.org/coprs/${COPR_USERNAME}/${project_name}/repo/epel-7/${COPR_USERNAME}-${project_name}-epel-7.repo
+\`\`\`
+
+\`\`\`
+sudo yum -y install ${rpm_name}-runtime
+\`\`\`"
+
 spec_file=${rpm_name}.spec
 mock_chroot=epel-7-${arch}
 
@@ -30,19 +42,17 @@ download_source_files() {
 
 build_srpm() {
   download_source_files
-  /usr/bin/mock -r ${mock_chroot} --init
-  /usr/bin/mock -r ${mock_chroot} --install scl-utils-build
-  /usr/bin/mock -r ${mock_chroot} --no-clean --buildsrpm --spec "${topdir}/SPECS/${spec_file}" --sources "${topdir}/SOURCES/"
-  rpm_version_release=`/usr/bin/mock -r ${mock_chroot} --chroot "rpmspec -P ${topdir_in_chroot}/SPECS/${spec_file}" | awk '
-$1=="Version:" { version=$2 }
-$1=="Release:" { release=$2 }
-END { printf("%s-%s", version, release) }'`
+  rpmbuild -bs "${topdir}/SPECS/${spec_file}"
+  version=`rpmspec -P ${topdir}/SPECS/${spec_file} | awk '$1=="Version:" { print $2 }'`
+  release=`rpmspec -P ${topdir}/SPECS/${spec_file} | awk '$1=="Release:" { print $2 }'`
+  rpm_version_release=${version}-${release}
   srpm_file=${rpm_name}-${rpm_version_release}.src.rpm
-  /usr/bin/mock -r ${mock_chroot} --copyout ${topdir_in_chroot}/SRPMS/${srpm_file} ${topdir}/SRPMS/
 }
 
 build_rpm_with_mock() {
   build_srpm
+  /usr/bin/mock -r ${mock_chroot} --init
+  /usr/bin/mock -r ${mock_chroot} --install scl-utils-build
   /usr/bin/mock -r ${mock_chroot} --no-clean --rebuild ${topdir}/SRPMS/${srpm_file}
 
   mock_result_dir=/var/lib/mock/${mock_chroot}/result
@@ -67,18 +77,10 @@ build_rpm_on_copr() {
     # since system python in CentOS 7 is old.
     # I read the source code of https://pypi.python.org/pypi/copr/1.62.1
     # since the API document at https://copr.fedoraproject.org/api/ is old.
-    #
-    # NOTE: Edit description here. You may or may not need to edit instructions.
     curl -s -X POST -u "${COPR_LOGIN}:${COPR_TOKEN}" \
       --data-urlencode "name=${project_name}" --data-urlencode "${mock_chroot}=y" \
-      --data-urlencode "description=[Software collection metapackage for python 2 with the prefix directory /opt/hn" \
-      --data-urlencode "instructions=\`\`\`
-sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${project_name}.repo https://copr.fedoraproject.org/coprs/${COPR_USERNAME}/${project_name}/repo/epel-7/${COPR_USERNAME}-${project_name}-epel-7.repo
-\`\`\`
-
-\`\`\`
-sudo yum install ${rpm_name}
-\`\`\`" \
+      --data-urlencode "description=${copr_project_description}" \
+      --data-urlencode "instructions=${copr_project_instructions}" \
       https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/new/
 
     # NOTE: Add scl-utils-build package to chroot.
